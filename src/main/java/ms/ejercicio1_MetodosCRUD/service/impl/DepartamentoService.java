@@ -23,7 +23,7 @@ public class DepartamentoService implements IDepartamentoService { //para utiliz
 
     @Override
     public List<Departamento> readAll() {
-        return departamentoRepository.findAll();
+        return departamentoRepository.findAll(); // busca todos
     }
 
 
