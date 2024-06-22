@@ -26,6 +26,7 @@ public class DepartamentoService implements IDepartamentoService { //para utiliz
         return departamentoRepository.findAll(); // busca todos
     }
 
+    //nomas para ver xd
 
     @Override
     public Departamento create(Departamento departamento) { //guardar datos
