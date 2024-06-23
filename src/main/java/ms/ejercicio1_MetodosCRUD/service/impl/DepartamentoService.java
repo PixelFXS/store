@@ -14,7 +14,7 @@ import java.util.Optional;
 public class DepartamentoService implements IDepartamentoService { //para utilizar los metodos
     //inyeccion de repositorios
     @Autowired //inyectamos la dependecia en la clase;
-    DepartamentoRepository departamentoRepository;
+            DepartamentoRepository departamentoRepository;
 
     @Override
     public Optional<Departamento> readById(Long idDepartamento) {
@@ -23,10 +23,9 @@ public class DepartamentoService implements IDepartamentoService { //para utiliz
 
     @Override
     public List<Departamento> readAll() {
-        return departamentoRepository.findAll(); // busca todos
+        return departamentoRepository.findAll().stream().filter(s -> s.getIsActive()).toList(); // busca todos
     }
 
-    //nomas para ver xd
 
     @Override
     public Departamento create(Departamento departamento) { //guardar datos
@@ -39,16 +38,24 @@ public class DepartamentoService implements IDepartamentoService { //para utiliz
     }
 
     @Override
-    public void delete(Departamento departamento) {
+    public String delete(Departamento departamento) {
         Optional<Departamento> optionalDepartamento = departamentoRepository.findById(departamento.getIdDepartamento());
         if (optionalDepartamento.isPresent()) {
             Departamento existingDepartamento = optionalDepartamento.get();
             existingDepartamento.setActive(false);
-            departamentoRepository.delete(existingDepartamento);
-            log.info("Eliminado*******************");
-        } else {
-            log.info("No eliminado****************");
-             }
+            try {
+                departamentoRepository.delete(existingDepartamento);
+                return "departamento: " + departamento.getIdDepartamento() + " Borrado";
+            } catch (Exception e) {
+
+                log.info("error: "+e.getMessage()+" Rastreo: "+e.getStackTrace());
+                return "No eliminado";
+            }
+
+        }else {
+            log.info("No encontrado");
+            return "No se encontro el departamento";
+        }
     }
 }
 

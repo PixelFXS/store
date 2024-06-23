@@ -24,7 +24,7 @@ public class DepartamentoController {
         return departamentoService.readAll();
     }
 
-    @PostMapping ("/departamento")
+    @PostMapping ("/departamento/create")
     public Departamento create(@RequestBody Departamento departamento){//mandar a llamar el metodo
         return departamentoService.create(departamento);
     }

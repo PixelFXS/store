@@ -10,5 +10,5 @@ public interface IPersonaService {
     public List<Persona> readAll();
     public Persona create(Persona persona);
     public Persona update(Persona persona);
-    public void delete(Long idPersona);
+    public String delete(Persona persona);
 }
