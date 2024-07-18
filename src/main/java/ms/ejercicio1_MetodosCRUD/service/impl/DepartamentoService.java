@@ -23,7 +23,8 @@ public class DepartamentoService implements IDepartamentoService { //para utiliz
 
     @Override
     public List<Departamento> readAll() {
-        return departamentoRepository.findAll().stream().filter(s -> s.getIsActive()).toList(); // busca todos
+        return departamentoRepository.findAll();
+                //.stream().filter(s -> s.getIsActive()).toList(); // busca todos
     }
 
 
@@ -45,13 +46,11 @@ public class DepartamentoService implements IDepartamentoService { //para utiliz
             existingDepartamento.setActive(false);
             try {
                 departamentoRepository.delete(existingDepartamento);
-                return "departamento: " + departamento.getIdDepartamento() + " Borrado";
+                return "departamento " + departamento.getIdDepartamento() + " Borrado";
             } catch (Exception e) {
-
-                log.info("error: "+e.getMessage()+" Rastreo: "+e.getStackTrace());
-                return "No eliminado";
+                log.info("error "+e.getMessage()+" Rastreo "+e.getStackTrace());
+                return "No se pudo eliminar";
             }
-
         }else {
             log.info("No encontrado");
             return "No se encontro el departamento";
