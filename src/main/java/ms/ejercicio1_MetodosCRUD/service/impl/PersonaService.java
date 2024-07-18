@@ -1,23 +1,23 @@
 package ms.ejercicio1_MetodosCRUD.service.impl;
 
 
+import lombok.extern.slf4j.Slf4j;
+import ms.ejercicio1_MetodosCRUD.dto.PersonaDTO;
 import ms.ejercicio1_MetodosCRUD.entity.Departamento;
 import ms.ejercicio1_MetodosCRUD.entity.Persona;
 import ms.ejercicio1_MetodosCRUD.repository.DepartamentoRepository;
 import ms.ejercicio1_MetodosCRUD.repository.PersonaRepository;
 import ms.ejercicio1_MetodosCRUD.service.IPersonaService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class PersonaService implements IPersonaService {
-
-    private static final Logger log = LoggerFactory.getLogger(PersonaService.class);
     @Autowired
     PersonaRepository personaRepository;
 
@@ -72,4 +72,46 @@ public class PersonaService implements IPersonaService {
             return "No encontrado";
         }
     }
+
+
+    @Override
+    public List<Persona> findEdad(Byte edad){
+        return personaRepository.findByEdad(edad);
+    }
+
+    @Override
+    public List<Persona> findName(String nombre){
+        return personaRepository.findByNombre(nombre);
+    }
+
+    @Override
+    public List<Persona> findDireccion(String direccion) {
+        return personaRepository.findByDireccion(direccion);
+    }
+
+    @Override
+    public List<PersonaDTO> findByDepartamento(Long idDepartamento) {
+        List<Persona> persona = personaRepository.findByFkIdDepartamento_IdDepartamento(idDepartamento);
+        return persona.stream()
+                .map(people -> new PersonaDTO(
+                        people.getNombre(),
+                        people.getDireccion(),
+                        people.getFkIdDepartamento().getM2()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PersonaDTO> responseQuery(String nombre) {
+        List<Object[]> objectList=personaRepository.personaResponse(nombre);
+        List<PersonaDTO> personaResponseList=objectList.stream().map(s->{
+            PersonaDTO personaResponse=new PersonaDTO();
+            personaResponse.setNombre(s[0].toString());
+            personaResponse.setDireccion(s[1].toString());
+            personaResponse.setM2(Double.valueOf(s[2].toString()));
+            return personaResponse;
+        }).toList();
+        return personaResponseList;
+    }
+
 }
